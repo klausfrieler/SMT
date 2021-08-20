@@ -1,0 +1,27 @@
+Package: SMT
+Type: Package
+Title: Seashore Measures of Musical Talents 
+Version: 0.9.0
+Author: Klaus Frieler, Reihnard Kopiez
+Maintainer: Klaus Frieler <klaus.frieler@as.mpg.de>
+Description: Implementation of a classical Seashore Measures of Musical Talents .
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.5.0),
+Imports:
+    psychTestR (>= 2.21.2),
+    shiny (>= 1.2.0),
+    methods,
+    htmltools (>= 0.3.6),
+    tidyverse (>= 1.2.1),
+    dplyr,
+    purrr,
+    tibble
+Suggests:
+    codetools,
+    devtools (>= 1.13.6)
+Remotes: 
+    pmcharrison/psychTestR,
+RoxygenNote: 7.1.1
