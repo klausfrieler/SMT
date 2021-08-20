@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data_raw$
+^output$
+
