@@ -19,7 +19,7 @@
 #' @param dict The psychTestR dictionary used for internationalisation.
 #' @export
 
-SMT <- function(max_items_per_task = 50,
+SMT <- function(max_items_per_task = 50L,
                 with_welcome = TRUE,
                 take_training = FALSE,
                 with_finish = TRUE,
@@ -29,7 +29,7 @@ SMT <- function(max_items_per_task = 50,
                 ) {
   audio_dir <-"https://s3.eu-west-1.amazonaws.com/media.dots.org/stimuli/SMT/"
   stopifnot(purrr::is_scalar_character(label),
-            purrr::is_scalar_integer(num_items) || purrr::is_scalar_double(num_items),
+            purrr::is_scalar_integer(max_items_per_task) || purrr::is_scalar_double(max_items_per_task),
             purrr::is_scalar_character(audio_dir),
             psychTestR::is.timeline(feedback) ||
               is.list(feedback) ||
