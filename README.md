@@ -77,8 +77,8 @@ and downloading your data.
 For more details on the psychTestR interface, 
 see http://psychtestr.com/.
 
-The SMT currently supports English (en), German (de), Russian (ru), and Nederlands (nl).
-You can selSMT one of these languages by passing a language code as 
+The SMT currently supports English (en) and German (de).
+You can select one of these languages by passing a language code as 
 an argument to `SMT_standalone()`, e.g. `SMT_standalone(languages = "de")`,
 or alternatively by passing it as a URL parameter to the test browser,
 eg. http://127.0.0.1:4412/?language=DE (note that the `p_id` argument must be empty).

@@ -122,8 +122,10 @@ audio_NAFC_page_flex <- function(label,
 
 
 SMT_item <- function(label = "",
+                     task_group,
                      audio_file,
                      correct_answer,
+                     num_choices,
                      prompt = "",
                      audio_dir = "",
                      save_answer = TRUE,
@@ -131,29 +133,24 @@ SMT_item <- function(label = "",
                      get_answer = NULL,
                      instruction_page = FALSE
 ){
-  #prompt <- shiny::div(prompt, shiny::p(audio_file, style = "text-size:10px;color:blue"))
-  choices <- c(psychTestR::i18n("ANSWER_FIRST"), psychTestR::i18n("ANSWER_SAME"), psychTestR::i18n("ANSWER_SECOND"))
-  audio_url <- file.path(audio_dir, audio_file)
+  #browser()
+  #num_choices <- 2
+  #if(task_group == "TONAL_MEMORY"){
+  #  num_choices <- 5
+  #}
+  choices <- map(1:num_choices, ~{ psychTestR::i18n(sprintf("%s_CHOICE%s", task_group, .x))})
+
+  audio_url <- file.path(audio_dir, sprintf("%s.mp3", audio_file))
   force(correct_answer)
   get_answer <- function(input, state, ...) {
     #browser()
     answer <- as.numeric(input$last_btn_pressed)
     correct <- correct_answer == answer
-    correct_diff <- 0
-    if(correct_answer != 2){
-      correct_diff <- as.numeric(answer %in% c(1,3))
-      total_score <- correct + correct_diff
-    }
-    else{
-      correct_diff <- NA
-      total_score <- as.numeric(correct)
-    }
     result <- tibble(answer = answer,
                      correct_answer = correct_answer,
                      correct = correct,
-                     correct_diff = correct_diff,
-                     total_score = total_score,
-                     stimulus = audio_file)
+                     # stimulus = audio_file,
+                     task_group =  task_group)
     #increase item_number
     item_number <- psychTestR::get_local(key = "item_number", state = state)
     psychTestR::set_local(key = "item_number", value = item_number + 1L , state = state)

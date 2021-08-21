@@ -14,15 +14,14 @@ SMT_feedback_with_score <- function(dict = SMT::SMT_dict) {
         results <- psychTestR::get_results(state = state,
                                            complete = TRUE,
                                            add_session_info = FALSE) %>% as.list()
-        text_finish <- psychTestR::i18n("FEEDBACK",
-                                        html = TRUE,
-                                        sub = list(num_questions = results$SMT$num_questions,
-                                                   num_correct = round(results$SMT$score * results$SMT$num_questions),
-                                                   total_score = results$SMT$total_score,
-                                                   max_score = results$SMT$max_score))
+        scores <- results$SMT$scores %>% filter(n_items > 0)
+        task_labels <- map(sprintf("%s_LABEL", scores$task_group), psychTestR::i18n)
+        res <- sprintf("%s: %s/%s (%s %%)", task_labels, scores$sum_score, scores$n_items, round(scores$mean_score*100))
+        text_finish <- shiny::tagList(map(res, ~{shiny::p(.x, style ="width:300px;text-align:justify")}))
         psychTestR::page(
           ui = shiny::div(
-            shiny::p(text_finish, style ="width:60%;text-align:justify"),
+            shiny::h4(psychTestR::i18n("SCORE_HEADER")),
+            shiny::div(text_finish, style = "margin-auto")
           )
         )
       }
@@ -31,18 +30,13 @@ SMT_feedback_with_score <- function(dict = SMT::SMT_dict) {
   )
 }
 
-SMT_feedback_pie_chart <- function(perc_correct){
-  correct_s <- sprintf("%s (%s%%)", psychTestR::i18n("CORRECT_RAW"), round(perc_correct*1000)/10)
-  incorrect_s <- sprintf("%s (%s%%)", psychTestR::i18n("INCORRECT_RAW"), round((1-perc_correct)*1000)/10)
-
-  data <- tibble(name = c(correct_s, incorrect_s), value = c(perc_correct, 1 - perc_correct))  %>%
-    dplyr::arrange(desc(name)) %>%
-    mutate(ypos = cumsum(value)- 0.5 * value )
-
-  q <- data %>% ggplot2::ggplot(ggplot2::aes(x = name, y = value, fill = name))
-  q <- q + ggplot2::geom_bar(stat = "identity", width = .5, colour = "white")
-  #q <- q + ggplot2::coord_polar("y", start = 0)
-  #q <- q + ggplot2::coord_flip()
+SMT_feedback_bar_chart <- function(data){
+  data <- data %>%
+    mutate(task_group = map(sprintf("%s_LABEL", data$task_group), psychTestR::i18n) %>% unlist()) %>%
+    mutate(sum_label = sprintf("%s/%s", sum_score, n_items))
+  q <- data %>% ggplot2::ggplot(ggplot2::aes(x = task_group, y = mean_score, fill = task_group))
+  q <- q + ggplot2::geom_col()
+  q <- q + ggplot2::geom_text(aes(x = task_group, y = .9, label = sum_label))
   q <- q + ggplot2::theme_minimal()
   q <- q + ggplot2::scale_y_continuous(labels = scales::percent)
   q <- q + ggplot2::theme(legend.position = "none")
@@ -53,26 +47,6 @@ SMT_feedback_pie_chart <- function(perc_correct){
   #q
 }
 
-SMT_feedback_graph_normal_curve <- function(perc_correct, x_min = 40, x_max = 160, x_mean = 100, x_sd = 15) {
-  q <-
-    ggplot2::ggplot(data.frame(x = c(x_min, x_max)), ggplot2::aes(x)) +
-    ggplot2::stat_function(fun = stats::dnorm, args = list(mean = x_mean, sd = x_sd)) +
-    ggplot2::stat_function(fun = stats::dnorm, args=list(mean = x_mean, sd = x_sd),
-                           xlim = c(x_min, (x_max - x_min) * perc_correct + x_min),
-                           fill = "lightblue4",
-                           geom = "area")
-  q <- q + ggplot2::theme_bw()
-  #q <- q + scale_y_continuous(labels = scales::percent, name="Frequency (%)")
-  #q <- q + ggplot2::scale_y_continuous(labels = NULL)
-  x_axis_lab <- sprintf(" %s %s", psychTestR::i18n("TESTNAME"), psychTestR::i18n("VALUE"))
-  title <- psychTestR::i18n("SCORE_TEMPLATE")
-  fake_IQ <- (x_max - x_min) * perc_correct + x_min
-  main_title <- sprintf("%s: %.0f", title, round(fake_IQ, digits = 0))
-
-  q <- q + ggplot2::labs(x = x_axis_lab, y = "")
-  q <- q + ggplot2::ggtitle(main_title)
-  plotly::ggplotly(q, width = 600, height = 450)
-}
 
 #' SMT feedback (with graph)
 #'
@@ -82,37 +56,18 @@ SMT_feedback_graph_normal_curve <- function(perc_correct, x_min = 40, x_max = 16
 #' @examples
 #' \dontrun{
 #' SMT_demo(feedback = SMT_feedback_with_score())}
-SMT_feedback_with_graph <- function(dict = SMT::SMT_dict, graph = "pie") {
+SMT_feedback_with_graph <- function(dict = SMT::SMT_dict) {
   psychTestR::new_timeline(
       psychTestR::reactive_page(function(state, ...) {
         #browser()
         results <- psychTestR::get_results(state = state,
                                            complete = TRUE,
                                            add_session_info = FALSE) %>% as.list()
-        if(graph == "fake_IQ") {#
-          x_min <- 40
-          x_max <- 160
-          total_score <- results$SMT$total_score/results$SMT$max_score
-          fake_IQ <- (x_max - x_min) * results$SMT$total_score/results$SMT$max_score + x_min
-          text_finish <- psychTestR::i18n("FEEDBACK",
-                                          html = TRUE,
-                                          sub = list(num_questions = results$SMT$num_questions,
-                                                     num_correct = round(results$SMT$score * results$SMT$num_questions),
-                                                     total_score = fake_IQ,
-                                                     max_score = x_max))
-          chart <- SMT_feedback_graph_normal_curve(total_score)
-        }
-        else{
-          text_finish <- psychTestR::i18n("FEEDBACK_SHORT",
-                                          html = TRUE,
-                                          sub = list(num_questions = results$SMT$num_questions,
-                                                     num_correct = round(results$SMT$score * results$SMT$num_questions),
-                                                     perc_correct = round(1000 * results$SMT$score)/10))
-          chart <- SMT_feedback_pie_chart(results$SMT$score)
-
-        }
+        text_finish <- psychTestR::i18n("FEEDBACK_SHORT", html = TRUE)
+        chart <- SMT_feedback_bar_chart(results$SMT$scores)
         psychTestR::page(
           ui = shiny::div(
+            shiny::h4(psychTestR::i18n("SCORE_HEADER")),
             shiny::p(text_finish, style ="width:60%;text-align:center"),
             shiny::p(chart),
             #shiny::plotOutput(chart),

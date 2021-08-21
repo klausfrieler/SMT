@@ -6,8 +6,7 @@
 \usage{
 SMT_standalone(
   title = NULL,
-  num_items = 20L,
-  with_id = TRUE,
+  with_id = FALSE,
   with_feedback = TRUE,
   with_welcome = TRUE,
   admin_password = "conifer",
@@ -15,14 +14,12 @@ SMT_standalone(
   languages = c("en", "de"),
   dict = SMT::SMT_dict,
   validate_id = "auto",
-  take_training = FALSE,
+  max_items_per_task = 50,
   ...
 )
 }
 \arguments{
 \item{title}{(Scalar character) Title to display during testing.}
-
-\item{num_items}{(Scalar integer) Number of items to be adminstered.}
 
 \item{with_id}{(Scalar boolean) Indicates, if ID should be asked for. Defaults to TRUE}
 
@@ -46,7 +43,7 @@ The first language is selected by default}
 \item{validate_id}{(Character scalar or closure) Function for validating IDs or string "auto" for default validation
 which means ID should consist only of  alphanumeric characters.}
 
-\item{take_training}{(Logical scalar) Whether to include the training phase. Defaults to FALSE}
+\item{max_items_per_task}{(Scalar integer) Max. number of items per task group.}
 
 \item{...}{Further arguments to be passed to \code{\link{SMT}()}.}
 }

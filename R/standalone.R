@@ -7,7 +7,7 @@ debug_locally <- !grepl("shiny-server", getwd())
 #' This function launches a standalone testing session for the SMT
 #' This can be used for data collection, either in the laboratory or online.
 #' @param title (Scalar character) Title to display during testing.
-#' @param num_items (Scalar integer) Number of items to be adminstered.
+#' @param max_items_per_task (Scalar integer) Max. number of items per task group.
 #' @param with_id (Scalar boolean) Indicates, if ID should be asked for. Defaults to TRUE
 #' @param with_feedback (Scalar boolean) Indicates if performance feedback will be given at the end of the test. Defaults to  FALSE
 #' @param with_welcome (Scalar boolean) Indicates, if a welcome page shall be displayed.  Defaults to  TRUE
@@ -22,13 +22,11 @@ debug_locally <- !grepl("shiny-server", getwd())
 #' @param dict The psychTestR dictionary used for internationalisation.
 #' @param validate_id (Character scalar or closure) Function for validating IDs or string "auto" for default validation
 #' which means ID should consist only of  alphanumeric characters.
-#' @param take_training (Logical scalar) Whether to include the training phase. Defaults to FALSE
 #' @param ... Further arguments to be passed to \code{\link{SMT}()}.
 #' @export
 
 SMT_standalone  <- function(title = NULL,
-                            num_items = 20L,
-                            with_id = TRUE,
+                            with_id = FALSE,
                             with_feedback = TRUE,
                             with_welcome = TRUE,
                             admin_password = "conifer",
@@ -36,12 +34,13 @@ SMT_standalone  <- function(title = NULL,
                             languages = c("en", "de"),
                             dict = SMT::SMT_dict,
                             validate_id = "auto",
-                            take_training = FALSE,
+                            #take_training = FALSE,
+                            max_items_per_task = 50,
                             ...) {
   feedback <- NULL
   if(with_feedback) {
-    feedback <- SMT::SMT_feedback_with_graph()
-    #feedback <- SMT::SMT_feedback_with_score()
+    #feedback <- SMT::SMT_feedback_with_graph()
+    feedback <- SMT::SMT_feedback_with_score()
   }
   elts <- psychTestR::join(
     if(with_welcome) SMT_welcome_page(dict = dict),
@@ -51,7 +50,7 @@ SMT_standalone  <- function(title = NULL,
                              button_text = psychTestR::i18n("CONTINUE"),
                              validate = validate_id),
         dict = dict),
-      SMT::SMT(num_items = num_items,
+      SMT::SMT(max_items_per_task = max_items_per_task,
                with_welcome =  FALSE,
                with_finish = FALSE,
                feedback = feedback,

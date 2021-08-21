@@ -4,7 +4,7 @@
 \alias{SMT_feedback_with_graph}
 \title{SMT feedback (with graph)}
 \usage{
-SMT_feedback_with_graph(dict = SMT::SMT_dict, graph = "pie")
+SMT_feedback_with_graph(dict = SMT::SMT_dict)
 }
 \arguments{
 \item{dict}{The psychTestR dictionary used for internationalisation.}

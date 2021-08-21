@@ -10,6 +10,15 @@ NULL
 #' @importFrom dplyr "pull"
 NULL
 
+#' @importFrom dplyr "group_by"
+NULL
+
+#' @importFrom dplyr "summarise"
+NULL
+
+#' @importFrom dplyr "bind_rows"
+NULL
+
 #' @importFrom tibble "tibble"
 NULL
 
@@ -20,6 +29,12 @@ NULL
 NULL
 
 #' @importFrom purrr "is_scalar_character"
+NULL
+
+#' @importFrom purrr "map"
+NULL
+
+#' @importFrom purrr "map_chr"
 NULL
 
 #' @importFrom methods "is"

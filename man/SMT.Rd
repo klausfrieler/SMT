@@ -5,7 +5,7 @@
 \title{SMT}
 \usage{
 SMT(
-  num_items = 18L,
+  max_items_per_task = 50,
   with_welcome = TRUE,
   take_training = FALSE,
   with_finish = TRUE,
@@ -15,7 +15,7 @@ SMT(
 )
 }
 \arguments{
-\item{num_items}{(Integer scalar) Number of items in the test.}
+\item{max_items_per_task}{(Scalar integer) Max. number of items per task group.}
 
 \item{with_welcome}{(Scalar boolean) Indicates, if a welcome page shall be displayed. Defaults to TRUE}
 
