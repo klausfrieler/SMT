@@ -19,6 +19,9 @@ NULL
 #' @importFrom dplyr "bind_rows"
 NULL
 
+#' @importFrom dplyr "count"
+NULL
+
 #' @importFrom tibble "tibble"
 NULL
 
