@@ -5,7 +5,7 @@
 \title{SMT}
 \usage{
 SMT(
-  max_items_per_task = 50,
+  max_items_per_task = 50L,
   with_welcome = TRUE,
   take_training = FALSE,
   with_finish = TRUE,
