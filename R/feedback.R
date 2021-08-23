@@ -64,7 +64,7 @@ SMT_feedback_bar_chart <- function(data){
     mutate(sum_label = sprintf("%s/%s", sum_score, n_items))
   q <- data %>% ggplot2::ggplot(ggplot2::aes(x = task_group, y = mean_score, fill = task_group))
   q <- q + ggplot2::geom_col()
-  q <- q + ggplot2::geom_text(aes(x = task_group, y = .9, label = sum_label))
+  q <- q + ggplot2::geom_text(ggplot2::aes(x = task_group, y = .9, label = sum_label))
   q <- q + ggplot2::theme_minimal()
   q <- q + ggplot2::scale_y_continuous(labels = scales::percent)
   q <- q + ggplot2::theme(legend.position = "none")
