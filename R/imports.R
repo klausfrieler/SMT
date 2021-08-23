@@ -25,6 +25,9 @@ NULL
 #' @importFrom dplyr "rename"
 NULL
 
+#' @importFrom dplyr "n"
+NULL
+
 #' @importFrom tibble "tibble"
 NULL
 
