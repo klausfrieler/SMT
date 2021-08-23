@@ -7,7 +7,8 @@
 SMT(
   max_items_per_task = 50L,
   with_welcome = TRUE,
-  take_training = FALSE,
+  with_selection = FALSE,
+  with_interim_feedback = FALSE,
   with_finish = TRUE,
   label = "SMT",
   feedback = SMT_feedback_with_score(),
@@ -19,7 +20,9 @@ SMT(
 
 \item{with_welcome}{(Scalar boolean) Indicates, if a welcome page shall be displayed. Defaults to TRUE}
 
-\item{take_training}{(Logical scalar) Whether to include the training phase. Defaults to FALSE}
+\item{with_selection}{(Scalar boolean) Indicates, if test configuration page shall be displayed. Defaults to TRUE}
+
+\item{with_interim_feedback}{(Scalar boolean) Indicates, if feedback after each task group shall be given}
 
 \item{with_finish}{(Scalar boolean) Indicates, if a finish (not final!) page shall be displayed. Defaults to TRUE}
 

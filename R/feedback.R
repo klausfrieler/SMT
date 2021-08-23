@@ -1,32 +1,60 @@
 #' SMT feedback (with score)
 #'
 #' Here the participant is given textual feedback at the end of the test.
+#' @param task_group (character scalar), specificy single task group feedback (internal use only)
 #' @param dict The psychTestR dictionary used for internationalisation.
 #' @export
 #' @examples
 #' \dontrun{
 #' SMT_demo(feedback = SMT_feedback_with_score())}
 
-SMT_feedback_with_score <- function(dict = SMT::SMT_dict) {
+SMT_feedback_with_score <- function(task_group = NULL, dict = SMT::SMT_dict) {
     psychTestR::new_timeline(
-      psychTestR::reactive_page(function(state, ...) {
-        #browser()
-        results <- psychTestR::get_results(state = state,
-                                           complete = TRUE,
-                                           add_session_info = FALSE) %>% as.list()
-        scores <- results$SMT$scores %>% filter(n_items > 0)
-        task_labels <- map(sprintf("%s_LABEL", scores$task_group), psychTestR::i18n)
-        res <- sprintf("%s: %s/%s (%s %%)", task_labels, scores$sum_score, scores$n_items, round(scores$mean_score*100))
-        text_finish <- shiny::tagList(map(res, ~{shiny::p(.x, style ="width:300px;text-align:justify")}))
-        psychTestR::page(
-          ui = shiny::div(
-            shiny::h4(psychTestR::i18n("SCORE_HEADER")),
-            shiny::div(text_finish, style = "margin-auto")
-          )
-        )
-      }
-      ),
+      .feedback_with_score(task_group),
     dict = dict
+  )
+}
+
+.feedback_with_score <- function(task_group = NULL){
+  psychTestR::reactive_page(function(state, ...) {
+    results <- psychTestR::get_results(state = state,
+                                       complete = TRUE,
+                                       add_session_info = FALSE) %>% as.list()
+    if("scores" %in% names(results$SMT)){
+      scores <- results$SMT$scores %>% filter(n_items > 0)
+    }
+    else{
+      scores <- results$SMT %>% bind_rows() %>%
+        group_by(task_group) %>%
+        summarise(sum_score = sum(correct), mean_score = mean(correct), n_items = n())
+    }
+    if(!is.null(task_group)){
+      scores <- scores %>% filter(task_group == !!task_group)
+      task_label <- psychTestR::i18n(sprintf("%s_LABEL", scores$task_group))
+      res <- sprintf("%s/%s (%s %%)",
+                     scores$sum_score,
+                     scores$n_items,
+                     round(scores$mean_score*100))
+      psychTestR::page(
+        ui = shiny::div(
+          shiny::h4(psychTestR::i18n("SCORE_HEADER_SINGLE", sub = list(task_group = task_label, result = res))),
+          shiny::p(psychTestR::trigger_button("next", psychTestR::i18n("CONTINUE")))
+        )
+      )
+    }
+    else{
+      task_labels <- map(sprintf("%s_LABEL", scores$task_group), psychTestR::i18n)
+      res <- sprintf("%s: %s/%s (%s %%)", task_labels, scores$sum_score, scores$n_items, round(scores$mean_score*100))
+      text_finish <- shiny::tagList(map(res, ~{shiny::p(.x, style ="width:300px;text-align:justify")}))
+      psychTestR::page(
+        ui = shiny::div(
+          shiny::h4(psychTestR::i18n("SCORE_HEADER")),
+          shiny::div(text_finish, style = "margin-auto"),
+          shiny::p(psychTestR::trigger_button("next", psychTestR::i18n("CONTINUE")))
+        )
+      )
+    }
+  }
   )
 }
 

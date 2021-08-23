@@ -6,6 +6,7 @@
 \usage{
 SMT_demo(
   num_items = 3L,
+  with_interim_feedback = TRUE,
   feedback = SMT::SMT_feedback_with_graph(),
   admin_password = "demo",
   researcher_email = "longgoldstudy@gmail.com",
@@ -16,6 +17,8 @@ SMT_demo(
 }
 \arguments{
 \item{num_items}{(Integer scalar) Number of items in the test.}
+
+\item{with_interim_feedback}{(Scalar boolean) Indicates, if feedback after each task group shall be given}
 
 \item{feedback}{(Function) Defines the feedback to give the participant
 at the end of the test. Defaults to a graph-based feedback page.}

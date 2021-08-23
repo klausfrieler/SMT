@@ -3,6 +3,7 @@
 #' This function launches a demo for the SMT.
 #'
 #' @param num_items (Integer scalar) Number of items in the test.
+#' @param with_interim_feedback (Scalar boolean) Indicates, if feedback after each task group shall be given
 #' @param feedback (Function) Defines the feedback to give the participant
 #' at the end of the test. Defaults to a graph-based feedback page.
 #' @param admin_password (Scalar character) Password for accessing the admin panel.
@@ -20,6 +21,7 @@
 #' @export
 #'
 SMT_demo <- function(num_items = 3L,
+                     with_interim_feedback = TRUE,
                      feedback = SMT::SMT_feedback_with_graph(),
                      admin_password = "demo",
                      researcher_email = "longgoldstudy@gmail.com",
@@ -31,7 +33,8 @@ SMT_demo <- function(num_items = 3L,
     SMT::SMT(max_items_per_task = num_items,
              with_welcome = FALSE,
              with_finish = FALSE,
-             take_training = FALSE,
+             with_selection = TRUE,
+             with_interim_feedback = with_interim_feedback,
              feedback = feedback,
              dict = dict,
              ...),

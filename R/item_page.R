@@ -134,10 +134,9 @@ SMT_item <- function(label = "",
                      instruction_page = FALSE
 ){
   #browser()
-  #num_choices <- 2
-  #if(task_group == "TONAL_MEMORY"){
-  #  num_choices <- 5
-  #}
+  if(length(num_choices) == 0){
+    browser()
+  }
   choices <- map(1:num_choices, ~{ psychTestR::i18n(sprintf("%s_CHOICE%s", task_group, .x))})
 
   audio_url <- file.path(audio_dir, sprintf("%s.mp3", audio_file))

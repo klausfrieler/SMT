@@ -4,9 +4,11 @@
 \alias{SMT_feedback_with_score}
 \title{SMT feedback (with score)}
 \usage{
-SMT_feedback_with_score(dict = SMT::SMT_dict)
+SMT_feedback_with_score(task_group = NULL, dict = SMT::SMT_dict)
 }
 \arguments{
+\item{task_group}{(character scalar), specificy single task group feedback (internal use only)}
+
 \item{dict}{The psychTestR dictionary used for internationalisation.}
 }
 \description{

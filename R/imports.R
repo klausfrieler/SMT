@@ -22,6 +22,9 @@ NULL
 #' @importFrom dplyr "count"
 NULL
 
+#' @importFrom dplyr "rename"
+NULL
+
 #' @importFrom tibble "tibble"
 NULL
 
@@ -38,6 +41,9 @@ NULL
 NULL
 
 #' @importFrom purrr "map_chr"
+NULL
+
+#' @importFrom purrr "map_dfr"
 NULL
 
 #' @importFrom methods "is"

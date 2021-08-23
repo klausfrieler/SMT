@@ -8,7 +8,9 @@ SMT_standalone(
   title = NULL,
   with_id = FALSE,
   with_feedback = TRUE,
+  with_selection = FALSE,
   with_welcome = TRUE,
+  with_interim_feedback = FALSE,
   admin_password = "conifer",
   researcher_email = "longgoldstudy@gmail.com",
   languages = c("en", "de"),
@@ -25,7 +27,11 @@ SMT_standalone(
 
 \item{with_feedback}{(Scalar boolean) Indicates if performance feedback will be given at the end of the test. Defaults to  FALSE}
 
+\item{with_selection}{(Scalar boolean) Indicates, if test configuration page shall be displayed. Defaults to TRUE}
+
 \item{with_welcome}{(Scalar boolean) Indicates, if a welcome page shall be displayed.  Defaults to  TRUE}
+
+\item{with_interim_feedback}{(Scalar boolean) Indicates, if feedback after each task group shall be given}
 
 \item{admin_password}{(Scalar character) Password for accessing the admin panel.}
 
