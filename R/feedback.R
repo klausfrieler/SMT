@@ -26,7 +26,7 @@ SMT_feedback_with_score <- function(task_group = NULL, dict = SMT::SMT_dict) {
     else{
       scores <- results$SMT %>% bind_rows() %>%
         group_by(task_group) %>%
-        summarise(sum_score = sum(correct), mean_score = mean(correct), n_items = n())
+        summarise(sum_score = sum(correct), mean_score = mean(correct), n_items = dplyr::n())
     }
     if(!is.null(task_group)){
       scores <- scores %>% filter(task_group == !!task_group)
