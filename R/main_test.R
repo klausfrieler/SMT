@@ -65,7 +65,6 @@ create_item <- function(items, task_group, item_id, audio_dir){
     eff_num_items <- psychTestR::get_local("test_def", state) %>%
       filter(task_group == !!task_group) %>%
       pull(num_items)
-    printf("%d -> %d", i, nrow(items[i,]))
     SMT_item(label = sprintf("q%s%d", task_group, i),
              task_group,
              correct_answer = items[i,]$correct,
@@ -109,11 +108,11 @@ create_test_pages <- function(num_items,
   }
   for(i in 1:num_items){
 
-     messagef("Added item #%d for task group %s stimulus = %s, correct= %d",
-              i,
-              task_group,
-              items[i,]$audio_file,
-              items[i,]$correct)
+     # messagef("Added item #%d for task group %s stimulus = %s, correct= %d",
+     #          i,
+     #          task_group,
+     #          items[i,]$audio_file,
+     #          items[i,]$correct)
 
     ret <- c(ret,
              psychTestR::conditional(
